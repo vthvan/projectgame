@@ -32,7 +32,12 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="defs.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="render.cpp" />
+		<Unit filename="render.h" />
+		<Unit filename="sdl.cpp" />
+		<Unit filename="sdl.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
