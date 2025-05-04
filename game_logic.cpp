@@ -11,11 +11,10 @@ void initGameState(GameState& state) {
     state.gameWon = false;
     state.gameLost = false;
     state.square = {0, 0, SQUARE_SIZE, SQUARE_SIZE};
-    state.currentLevel = 1;
 
     // Tải map đầu tiên
     char filename[20];
-    snprintf(filename, sizeof(filename), "level%d.txt", state.currentLevel);
+    snprintf(filename, sizeof(filename), "map/level%d.txt", state.currentLevel);
     if (!loadMapFromFile(filename)) {
         cerr << "Failed to load initial map!" << endl;
         state.quit = true;
@@ -89,7 +88,7 @@ void resetGameState(GameState& state) {
         if (startFound) break;
     }
     if (!startFound) {
-        std::cerr << "No start position found in map!" << std::endl;
+        cerr << "No start position found in map!" << endl;
         state.quit = true;
     }
 }
@@ -162,13 +161,13 @@ void handleInput(GameState& state, const Uint8* keyboardState) {
     // Kiểm tra va chạm
     if (checkOutOfMap(newRect)) {
         state.gameLost = true;
-        std::cout << "Game Over: You went out of the map!" << std::endl;
+        cout << "Game Over: You went out of the map!" << endl;
     } else if (!checkCollisionWithWall(newRect)) {
         state.square.x = newX;
         state.square.y = newY;
         if (checkReachedGoal(state.square)) {
             state.gameWon = true;
-            std::cout << "You Win: Reached the destination!" << std::endl;
+            cout << "You Win: Reached the destination!" << endl;
         }
     }
 }

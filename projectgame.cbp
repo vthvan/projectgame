@@ -33,6 +33,10 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="defs.h" />
+		<Unit filename="game_logic.cpp" />
+		<Unit filename="game_logic.h" />
+		<Unit filename="level1.txt" />
+		<Unit filename="level2.txt" />
 		<Unit filename="main.cpp" />
 		<Unit filename="render.cpp" />
 		<Unit filename="render.h" />
