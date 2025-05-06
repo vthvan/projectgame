@@ -12,7 +12,6 @@ void initGameState(GameState& state) {
     state.gameLost = false;
     state.square = {0, 0, SQUARE_SIZE, SQUARE_SIZE};
 
-    // Tải map đầu tiên
     char filename[20];
     snprintf(filename, sizeof(filename), "map/level%d.txt", state.currentLevel);
     if (!loadMapFromFile(filename)) {
@@ -21,7 +20,6 @@ void initGameState(GameState& state) {
         return;
     }
 
-    // Tìm vị trí xuất phát
     bool startFound = false;
     for (int y = 0; y < MAP_HEIGHT; y++) {
         for (int x = 0; x < MAP_WIDTH; x++) {
@@ -94,12 +92,12 @@ void resetGameState(GameState& state) {
 }
 
 bool checkCollisionWithWall(const SDL_Rect& rect) {
-    // Kiểm tra bốn góc của hình vuông
+
     int corners[4][2] = {
-        {rect.x, rect.y}, // goc tren trai
-        {rect.x + rect.w - 1, rect.y}, // goc tren phai
-        {rect.x, rect.y + rect.h - 1}, // goc duoi trai
-        {rect.x + rect.w - 1, rect.y + rect.h - 1} // goc duoi phai
+        {rect.x, rect.y},
+        {rect.x + rect.w - 1, rect.y},
+        {rect.x, rect.y + rect.h - 1},
+        {rect.x + rect.w - 1, rect.y + rect.h - 1}
     };
 
     for (int i = 0; i < 4; i++) {
@@ -107,7 +105,7 @@ bool checkCollisionWithWall(const SDL_Rect& rect) {
         int mapY = (corners[i][1] - MAP_OFFSET_Y) / TILE_SIZE;
         if (mapX >= 0 && mapX < MAP_WIDTH && mapY >= 0 && mapY < MAP_HEIGHT) {
             if (map[mapY][mapX] == 1) {
-                return true; // Va chạm với tường
+                return true;
             }
         }
     }
@@ -115,7 +113,6 @@ bool checkCollisionWithWall(const SDL_Rect& rect) {
 }
 
 bool checkOutOfMap(const SDL_Rect& rect) {
-    // Kiểm tra xem hình vuông có nằm hoàn toàn ngoài map không
     int mapLeft = MAP_OFFSET_X;
     int mapRight = MAP_OFFSET_X + MAP_WIDTH * TILE_SIZE;
     int mapTop = MAP_OFFSET_Y;
@@ -126,7 +123,6 @@ bool checkOutOfMap(const SDL_Rect& rect) {
 }
 
 bool checkReachedGoal(const SDL_Rect& rect) {
-    // Tìm ô đích và kiểm tra giao nhau
     for (int y = 0; y < MAP_HEIGHT; y++) {
         for (int x = 0; x < MAP_WIDTH; x++) {
             if (map[y][x] == 3) {
@@ -155,10 +151,8 @@ void handleInput(GameState& state, const Uint8* keyboardState) {
         newX += SPEED;
     }
 
-    // Tạo hình vuông mới để kiểm tra
     SDL_Rect newRect = {newX, newY, SQUARE_SIZE, SQUARE_SIZE};
 
-    // Kiểm tra va chạm
     if (checkOutOfMap(newRect)) {
         state.gameLost = true;
         cout << "Game Over: You went out of the map!" << endl;

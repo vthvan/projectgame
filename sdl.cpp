@@ -9,7 +9,6 @@ using namespace std;
 
 bool initSDL(SDL_Window** window, SDL_Renderer** renderer)
 {
-     // Khởi tạo SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError() << endl;
         return false;
@@ -20,7 +19,6 @@ bool initSDL(SDL_Window** window, SDL_Renderer** renderer)
         return false;
     }
 
-    //tao cua so
     * window = SDL_CreateWindow("MAZE",
                                         SDL_WINDOWPOS_UNDEFINED,
                                         SDL_WINDOWPOS_UNDEFINED,
@@ -33,7 +31,6 @@ bool initSDL(SDL_Window** window, SDL_Renderer** renderer)
         return false;
     }
 
-    //tao renderer
     * renderer = SDL_CreateRenderer(*window, -1, SDL_RENDERER_ACCELERATED);
     if (*renderer == nullptr) {
         cerr << "Renderer could not be created! SDL_Error: " << SDL_GetError() << endl;
@@ -65,7 +62,7 @@ Textures loadTextures(SDL_Renderer* renderer)
         textures.menu = SDL_CreateTextureFromSurface(renderer, menuSurface);
         SDL_FreeSurface(menuSurface);
         if (!textures.menu) {
-            cerr << "Unable to create background texture! SDL_Error: " << SDL_GetError() << endl;
+            cerr << "Unable to create menu texture! SDL_Error: " << SDL_GetError() << endl;
         }
     } else {
         cerr << "Unable to load menu.png! IMG_Error: " << IMG_GetError() << endl;
@@ -93,7 +90,7 @@ Textures loadTextures(SDL_Renderer* renderer)
         cerr << "Unable to load wall.png! IMG_Error: " << IMG_GetError() << endl;
     }
 
-    SDL_Surface* startSurface = IMG_Load("pic/goal.png");
+    SDL_Surface* startSurface = IMG_Load("pic/start.png");
     if (startSurface) {
         textures.start = SDL_CreateTextureFromSurface(renderer, startSurface);
         SDL_FreeSurface(startSurface);
@@ -109,13 +106,12 @@ Textures loadTextures(SDL_Renderer* renderer)
         textures.goal = SDL_CreateTextureFromSurface(renderer, goalSurface);
         SDL_FreeSurface(goalSurface);
         if (!textures.goal) {
-            cerr << "Unable to create goal texture! SDL_Error: " << SDL_GetError() << endl;
+            cerr << "Unable to create door texture! SDL_Error: " << SDL_GetError() << endl;
         }
     } else {
-        cerr << "Unable to load goal.png! IMG_Error: " << IMG_GetError() << endl;
+        cerr << "Unable to load door.png! IMG_Error: " << IMG_GetError() << endl;
     }
 
-    // Tải hình ảnh level
     for (int i = 0; i < MAX_LEVELS; i++) {
         char filename[20];
         snprintf(filename, sizeof(filename), "pic/lv%d.png", i + 1);
@@ -135,7 +131,7 @@ Textures loadTextures(SDL_Renderer* renderer)
         textures.playButton = SDL_CreateTextureFromSurface(renderer, playSurface);
         SDL_FreeSurface(playSurface);
         if (!textures.playButton) {
-            cerr << "Unable to create goal texture! SDL_Error: " << SDL_GetError() << endl;
+            cerr << "Unable to create play button texture! SDL_Error: " << SDL_GetError() << endl;
         }
     } else {
         cerr << "Unable to load playbutton.png! IMG_Error: " << IMG_GetError() << endl;
@@ -146,13 +142,55 @@ Textures loadTextures(SDL_Renderer* renderer)
         textures.levelsButton = SDL_CreateTextureFromSurface(renderer, levelsSurface);
         SDL_FreeSurface(levelsSurface);
         if (!textures.levelsButton) {
-            cerr << "Unable to create goal texture! SDL_Error: " << SDL_GetError() << endl;
+            cerr << "Unable to create levels button texture! SDL_Error: " << SDL_GetError() << endl;
         }
     } else {
         cerr << "Unable to load levelsbutton.png! IMG_Error: " << IMG_GetError() << endl;
     }
 
+    SDL_Surface* loseSurface = IMG_Load("pic/lose.png");
+    if (loseSurface) {
+        textures.lose = SDL_CreateTextureFromSurface(renderer, loseSurface);
+        SDL_FreeSurface(loseSurface);
+        if (!textures.lose) {
+            cerr << "Unable to create lose texture! SDL_Error: " << SDL_GetError() << endl;
+        }
+    } else {
+        cerr << "Unable to load lose.png! IMG_Error: " << IMG_GetError() << endl;
+    }
 
+     SDL_Surface* homeSurface = IMG_Load("pic/homebutton.png");
+    if (homeSurface) {
+        textures.homeButton = SDL_CreateTextureFromSurface(renderer, homeSurface);
+        SDL_FreeSurface(homeSurface);
+        if (!textures.homeButton) {
+            cerr << "Unable to create home button texture! SDL_Error: " << SDL_GetError() << endl;
+        }
+    } else {
+        cerr << "Unable to load homebutton.png! IMG_Error: " << IMG_GetError() << endl;
+    }
+
+     SDL_Surface* winSurface = IMG_Load("pic/win.png");
+    if (winSurface) {
+        textures.win = SDL_CreateTextureFromSurface(renderer, winSurface);
+        SDL_FreeSurface(winSurface);
+        if (!textures.win) {
+            cerr << "Unable to create win texture! SDL_Error: " << SDL_GetError() << endl;
+        }
+    } else {
+        cerr << "Unable to load win.png! IMG_Error: " << IMG_GetError() << endl;
+    }
+
+    SDL_Surface* nextSurface = IMG_Load("pic/nextbutton.png");
+    if (nextSurface) {
+        textures.nextButton = SDL_CreateTextureFromSurface(renderer, nextSurface);
+        SDL_FreeSurface(nextSurface);
+        if (!textures.nextButton) {
+            cerr << "Unable to create next texture! SDL_Error: " << SDL_GetError() << endl;
+        }
+    } else {
+        cerr << "Unable to load nextbutton.png! IMG_Error: " << IMG_GetError() << endl;
+    }
     return textures;
 
 }
@@ -165,11 +203,13 @@ void cleanupSDL(SDL_Window* window, SDL_Renderer* renderer, Textures textures)
         SDL_DestroyTexture(textures.wall);
         SDL_DestroyTexture(textures.start);
         SDL_DestroyTexture(textures.goal);
+        SDL_DestroyTexture(textures.lose);
         for (int i = 0; i < MAX_LEVELS; i++) {
         SDL_DestroyTexture(textures.lvTextures[i]);
     }
         SDL_DestroyTexture(textures.playButton);
         SDL_DestroyTexture(textures.levelsButton);
+        SDL_DestroyTexture(textures.homeButton);
         SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);
         IMG_Quit();

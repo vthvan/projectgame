@@ -2,79 +2,109 @@
 #include "sdl.h"
 
 void renderGame(SDL_Renderer* renderer, const GameState& state, const Textures& textures, int currentLevel) {
-    // Vẽ hình ảnh nền
+
     SDL_RenderCopy(renderer, textures.background, nullptr, nullptr);
 
-    // Vẽ map
+
     for (int y = 0; y < MAP_HEIGHT; y++) {
         for (int x = 0; x < MAP_WIDTH; x++) {
             SDL_Rect tile = {MAP_OFFSET_X + x * TILE_SIZE, MAP_OFFSET_Y + y * TILE_SIZE, TILE_SIZE, TILE_SIZE};
             switch (map[y][x]) {
-                case 0: // Đất
+                case 0:
                     SDL_RenderCopy(renderer, textures.ground, nullptr, &tile);
                     break;
-                case 1: // Tường
+                case 1:
                     SDL_RenderCopy(renderer, textures.wall, nullptr, &tile);
                     break;
-                case 2: // Xuất phát
+                case 2:
                     SDL_RenderCopy(renderer, textures.start, nullptr, &tile);
                     break;
-                case 3: // Đích
+                case 3:
                     SDL_RenderCopy(renderer, textures.goal, nullptr, &tile);
                     break;
             }
         }
     }
 
-    // Vẽ hình vuông
+
     SDL_SetRenderDrawColor(renderer, 255, 30, 80, 255);
     SDL_RenderFillRect(renderer, &state.square);
 
-     // Vẽ hình ảnh level
+
     if (currentLevel >= 1 && currentLevel <= MAX_LEVELS && textures.lvTextures[currentLevel - 1]) {
         SDL_Rect levelRect = {WINDOW_WIDTH/2 - 134, 10, 268, 92};
         SDL_RenderCopy(renderer, textures.lvTextures[currentLevel - 1], nullptr, &levelRect);
     }
 
-    // Cập nhật màn hình
+    if (textures.homeButton) {
+        SDL_Rect homeRect = {10,10, 70, 70};
+        SDL_RenderCopy(renderer, textures.homeButton, nullptr, &homeRect);
+    }
+
+
     SDL_RenderPresent(renderer);
 }
 
 void renderMenu(SDL_Renderer* renderer, const Textures& textures) {
-    // Vẽ nền
+
     SDL_RenderCopy(renderer, textures.menu, nullptr, nullptr);
 
-    // Vẽ nút Play
+
     if (textures.playButton) {
         SDL_Rect playRect = {WINDOW_WIDTH/2 - 81 +50, WINDOW_HEIGHT/2 -30, 162, 162};
         SDL_RenderCopy(renderer, textures.playButton, nullptr, &playRect);
     }
 
-    // Vẽ nút Levels
     if (textures.levelsButton) {
         SDL_Rect levelsRect = {(WINDOW_WIDTH/2 - 81 +50)-67,(WINDOW_HEIGHT/2 -30)+172, 297, 122};
         SDL_RenderCopy(renderer, textures.levelsButton, nullptr, &levelsRect);
     }
 
-    // Cập nhật màn hình
+
     SDL_RenderPresent(renderer);
 }
 
 void renderChooseLevel(SDL_Renderer* renderer, const Textures& textures)
 {
-        // Vẽ nền
     SDL_RenderCopy(renderer, textures.background, nullptr, nullptr);
 
-    // Vẽ lưới 2x5 nút level
     for (int i = 0; i < MAX_LEVELS; i++) {
-        int row = i / 3; //
-        int col = i % 3; //
+        int row = i / 3;
+        int col = i % 3;
         SDL_Rect levelRect = {150 + col * (268 + 50), 150 + row * (92 + 50), 268, 92};
         if (textures.lvTextures[i]) {
             SDL_RenderCopy(renderer, textures.lvTextures[i], nullptr, &levelRect);
         }
     }
 
-    // Cập nhật màn hình
     SDL_RenderPresent(renderer);
 }
+
+void renderLose(SDL_Renderer* renderer, const Textures& textures) {
+
+    SDL_RenderCopy(renderer, textures.lose, nullptr, nullptr);
+
+    if (textures.homeButton) {
+        SDL_Rect homeRect = {WINDOW_WIDTH/2 - 65, WINDOW_HEIGHT/2 + 80, 147, 147};
+        SDL_RenderCopy(renderer, textures.homeButton, nullptr, &homeRect);
+    }
+
+    SDL_RenderPresent(renderer);
+}
+
+void renderWin(SDL_Renderer* renderer, const Textures& textures){
+     SDL_RenderCopy(renderer, textures.win, nullptr, nullptr);
+
+     if (textures.homeButton) {
+        SDL_Rect homeRect = {WINDOW_WIDTH/2 -150 , WINDOW_HEIGHT/2 +70 , 147, 147};
+        SDL_RenderCopy(renderer, textures.homeButton, nullptr, &homeRect);
+    }
+
+     if (textures.nextButton) {
+        SDL_Rect nextRect = {WINDOW_WIDTH/2 +50 , WINDOW_HEIGHT/2 +70, 102, 147};
+        SDL_RenderCopy(renderer, textures.nextButton,nullptr, &nextRect);
+     }
+
+     SDL_RenderPresent(renderer);
+}
+

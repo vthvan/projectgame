@@ -15,13 +15,15 @@ const int MAP_OFFSET_X = (WINDOW_WIDTH - MAP_WIDTH * TILE_SIZE) / 2;
 const int MAP_OFFSET_Y = (WINDOW_HEIGHT - MAP_HEIGHT * TILE_SIZE) / 2 +10;
 const int MAX_LEVELS = 10;
 
-// Map (0: đất, 1: tường, 2: xuất phát, 3: đích)
+
 extern int map[MAP_HEIGHT][MAP_WIDTH];
 
 enum gameMode{
     menu,
     playing,
-    levels
+    levels,
+    lose,
+    win
 } ;
 
 struct GameState {
@@ -44,6 +46,10 @@ struct Textures {
     SDL_Texture* lvTextures[MAX_LEVELS];
     SDL_Texture* playButton;
     SDL_Texture* levelsButton;
+    SDL_Texture* lose;
+    SDL_Texture* win;
+    SDL_Texture* homeButton;
+    SDL_Texture* nextButton;
 };
 
 #endif
