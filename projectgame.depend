@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1746453962 source:d:\c++\projectgame\main.cpp
+1746566252 source:d:\c++\projectgame\main.cpp
 	<SDL.h>
 	<SDL_image.h>
 	<iostream>
@@ -8,7 +8,7 @@
 	"defs.h"
 	"game_logic.h"
 
-1746454493 source:d:\c++\projectgame\render.cpp
+1746566491 source:d:\c++\projectgame\render.cpp
 	"render.h"
 	"sdl.h"
 
@@ -17,25 +17,25 @@
 	<SDL_image.h>
 	"defs.h"
 
-1746452963 d:\c++\projectgame\defs.h
+1746567132 d:\c++\projectgame\defs.h
 	<SDL.h>
 	<SDL_image.h>
 
-1746452963 d:\c++\projectgame\render.h
+1746565444 d:\c++\projectgame\render.h
 	"defs.h"
 
-1746452963 source:d:\c++\projectgame\sdl.cpp
+1746565877 source:d:\c++\projectgame\sdl.cpp
 	"sdl.h"
 	<iostream>
 	<string>
 	<SDL.h>
 	<SDL_image.h>
 
-1746190311 source:d:\c++\projectgame\game_logic.cpp
+1746562416 source:d:\c++\projectgame\game_logic.cpp
 	"game_logic.h"
 	<iostream>
 	<fstream>
 
-1746035806 d:\c++\projectgame\game_logic.h
+1746560663 d:\c++\projectgame\game_logic.h
 	"defs.h"
 

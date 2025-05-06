@@ -191,6 +191,39 @@ Textures loadTextures(SDL_Renderer* renderer)
     } else {
         cerr << "Unable to load nextbutton.png! IMG_Error: " << IMG_GetError() << endl;
     }
+
+    SDL_Surface* trapSurface = IMG_Load("pic/trap.png");
+    if (trapSurface) {
+        textures.trap = SDL_CreateTextureFromSurface(renderer, trapSurface);
+        SDL_FreeSurface(trapSurface);
+        if (!textures.trap) {
+            cerr << "Unable to create trap texture! SDL_Error: " << SDL_GetError() << endl;
+        }
+    } else {
+        cerr << "Unable to load trap.png! IMG_Error: " << IMG_GetError() << endl;
+    }
+
+    SDL_Surface* inforSurface = IMG_Load("pic/infor.png");
+    if (inforSurface) {
+        textures.inforButton = SDL_CreateTextureFromSurface(renderer, inforSurface);
+        SDL_FreeSurface(inforSurface);
+        if (!textures.inforButton) {
+            cerr << "Unable to create infor texture! SDL_Error: " << SDL_GetError() << endl;
+        }
+    } else {
+        cerr << "Unable to load infor.png! IMG_Error: " << IMG_GetError() << endl;
+    }
+
+    SDL_Surface* guideSurface = IMG_Load("pic/guide.png");
+    if (guideSurface) {
+        textures.guide = SDL_CreateTextureFromSurface(renderer, guideSurface);
+        SDL_FreeSurface(guideSurface);
+        if (!textures.guide) {
+            cerr << "Unable to create infor texture! SDL_Error: " << SDL_GetError() << endl;
+        }
+    } else {
+        cerr << "Unable to load infor.png! IMG_Error: " << IMG_GetError() << endl;
+    }
     return textures;
 
 }
@@ -210,6 +243,9 @@ void cleanupSDL(SDL_Window* window, SDL_Renderer* renderer, Textures textures)
         SDL_DestroyTexture(textures.playButton);
         SDL_DestroyTexture(textures.levelsButton);
         SDL_DestroyTexture(textures.homeButton);
+        SDL_DestroyTexture(textures.trap);
+        SDL_DestroyTexture(textures.inforButton);
+        SDL_DestroyTexture(textures.guide);
         SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);
         IMG_Quit();

@@ -9,5 +9,6 @@ bool checkReachedGoal(const SDL_Rect& rect);
 bool checkOutOfMap(const SDL_Rect& rect);
 bool checkCollisionWithWall(const SDL_Rect& rect);
 bool loadMapFromFile(const char* filename);
-void resetGameState(GameState& state);
+bool checkReachedTrap(const SDL_Rect& rect);
+void checkTime(GameState& state);
 #endif

@@ -11,6 +11,8 @@ void initGameState(GameState& state) {
     state.gameWon = false;
     state.gameLost = false;
     state.square = {0, 0, SQUARE_SIZE, SQUARE_SIZE};
+    state.timeStart = SDL_GetTicks64();
+    state.timeLimit = timeLimits[state.currentLevel-1];
 
     char filename[20];
     snprintf(filename, sizeof(filename), "map/level%d.txt", state.currentLevel);
@@ -53,7 +55,7 @@ bool loadMapFromFile(const char* filename) {
                 file.close();
                 return false;
             }
-            if (c >= '0' && c <= '3') {
+            if (c >= '0' && c <= '4') {
                 map[y][x] = c - '0';
             } else {
                 cerr << "Invalid character in " << filename <<endl;
@@ -67,29 +69,7 @@ bool loadMapFromFile(const char* filename) {
     return true;
 }
 
-void resetGameState(GameState& state) {
-    state.gameWon = false;
-    state.gameLost = false;
-    state.square = {0, 0, SQUARE_SIZE, SQUARE_SIZE};
 
-    // Tìm vị trí xuất phát
-    bool startFound = false;
-    for (int y = 0; y < MAP_HEIGHT; y++) {
-        for (int x = 0; x < MAP_WIDTH; x++) {
-            if (map[y][x] == 2) {
-                state.square.x = MAP_OFFSET_X + x * TILE_SIZE + (TILE_SIZE - SQUARE_SIZE) / 2;
-                state.square.y = MAP_OFFSET_Y + y * TILE_SIZE + (TILE_SIZE - SQUARE_SIZE) / 2;
-                startFound = true;
-                break;
-            }
-        }
-        if (startFound) break;
-    }
-    if (!startFound) {
-        cerr << "No start position found in map!" << endl;
-        state.quit = true;
-    }
-}
 
 bool checkCollisionWithWall(const SDL_Rect& rect) {
 
@@ -134,6 +114,26 @@ bool checkReachedGoal(const SDL_Rect& rect) {
     return false;
 }
 
+bool checkReachedTrap(const SDL_Rect& rect) {
+    int corners[4][2] = {
+        {rect.x, rect.y},
+        {rect.x + rect.w - 1, rect.y},
+        {rect.x, rect.y + rect.h - 1},
+        {rect.x + rect.w - 1, rect.y + rect.h - 1}
+    };
+
+    for (int i = 0; i < 4; i++) {
+        int mapX = (corners[i][0] - MAP_OFFSET_X) / TILE_SIZE;
+        int mapY = (corners[i][1] - MAP_OFFSET_Y) / TILE_SIZE;
+        if (mapX >= 0 && mapX < MAP_WIDTH && mapY >= 0 && mapY < MAP_HEIGHT) {
+            if (map[mapY][mapX] == 4) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 void handleInput(GameState& state, const Uint8* keyboardState) {
     int newX = state.square.x;
     int newY = state.square.y;
@@ -153,7 +153,7 @@ void handleInput(GameState& state, const Uint8* keyboardState) {
 
     SDL_Rect newRect = {newX, newY, SQUARE_SIZE, SQUARE_SIZE};
 
-    if (checkOutOfMap(newRect)) {
+    if (checkOutOfMap(newRect) || checkReachedTrap(newRect)) {
         state.gameLost = true;
         cout << "Game Over: You went out of the map!" << endl;
     } else if (!checkCollisionWithWall(newRect)) {
@@ -163,6 +163,14 @@ void handleInput(GameState& state, const Uint8* keyboardState) {
             state.gameWon = true;
             cout << "You Win: Reached the destination!" << endl;
         }
+    }
+}
+
+void checkTime(GameState& state) {
+    Uint64 currentTime = SDL_GetTicks64();
+    if (currentTime-state.timeStart >= state.timeLimit)
+    {
+        state.gameLost = true;
     }
 }
 

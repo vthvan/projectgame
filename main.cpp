@@ -57,7 +57,21 @@ int main(int argc, char* argv[]) {
                     y >= levelsRect.y && y <= levelsRect.y + levelsRect.h) {
                     state.mode = levels;
             }
+
+                SDL_Rect inforRect = {20,20, 100, 100};
+                if (x >= inforRect.x && x <= inforRect.x + inforRect.w &&
+                    y >= inforRect.y && y <= inforRect.y + inforRect.h) {
+                    state.mode = guide;
                 }
+                }
+            else if (state.mode == guide)
+            {
+                SDL_Rect inforRect = {20,20, 100, 100};
+                if (x >= inforRect.x && x <= inforRect.x + inforRect.w &&
+                    y >= inforRect.y && y <= inforRect.y + inforRect.h) {
+                    state.mode = menu;
+                }
+            }
 
          else if (state.mode == levels) {
                     for (int i = 0; i < MAX_LEVELS; i++) {
@@ -100,16 +114,10 @@ int main(int argc, char* argv[]) {
                 y >= nextRect.y && y <= nextRect.y + nextRect.h) {
                  if (state.currentLevel < MAX_LEVELS) {
                 state.currentLevel++;
-                char filename[20];
-                snprintf(filename, sizeof(filename), "map/level%d.txt", state.currentLevel);
-                if (loadMapFromFile(filename)) {
                 state.mode = playing;
-                resetGameState(state);
-            } else {
-                cerr << "Failed to load level " << state.currentLevel << endl;
-                state.quit = true;
+                initGameState(state);
             }
-        } else if (state.currentLevel == MAX_LEVELS) {
+         else if (state.currentLevel == MAX_LEVELS) {
             cerr << "Congratulations! You completed all levels!" << endl;
             state.quit = true;
         }
@@ -120,6 +128,10 @@ int main(int argc, char* argv[]) {
 
          if (state.mode == menu) {
             renderMenu(renderer, textures);
+        }
+        else if (state.mode == guide)
+        {
+            renderGuide(renderer,textures);
         }
         else if (state.mode == levels)
         {
@@ -132,6 +144,8 @@ int main(int argc, char* argv[]) {
         {
         const Uint8* keyboardState = SDL_GetKeyboardState(nullptr);
         handleInput(state,keyboardState);
+
+        checkTime(state);
 
         renderGame(renderer,state,textures,state.currentLevel);
 
