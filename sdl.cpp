@@ -219,10 +219,10 @@ Textures loadTextures(SDL_Renderer* renderer)
         textures.guide = SDL_CreateTextureFromSurface(renderer, guideSurface);
         SDL_FreeSurface(guideSurface);
         if (!textures.guide) {
-            cerr << "Unable to create infor texture! SDL_Error: " << SDL_GetError() << endl;
+            cerr << "Unable to create guide texture! SDL_Error: " << SDL_GetError() << endl;
         }
     } else {
-        cerr << "Unable to load infor.png! IMG_Error: " << IMG_GetError() << endl;
+        cerr << "Unable to load guide.png! IMG_Error: " << IMG_GetError() << endl;
     }
     return textures;
 
